@@ -1,8 +1,8 @@
 package pl.friturillo;
 
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
