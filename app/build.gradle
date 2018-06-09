@@ -25,6 +25,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:15.0.1'
     compile 'com.android.support:design:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.1'
+    compile 'com.android.support:support-v4:26.1.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
