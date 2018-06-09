@@ -44,16 +44,19 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        Fragment newFragment = new SearchFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.add(R.id.fragment_container, newFragment);
-        transaction.commit();
+        setFragment(new SearchFragment());
     }
 
     private void showMap() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
+    }
+
+    private void setFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 
     @Override
@@ -66,20 +69,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_route) {
-            Fragment newFragment = new SearchFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            transaction.replace(R.id.fragment_container, newFragment);
-            transaction.commit();
+            setFragment(new SearchFragment());
         } else if (id == R.id.nav_description) {
-
+            setFragment(new DescriptionFragment());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

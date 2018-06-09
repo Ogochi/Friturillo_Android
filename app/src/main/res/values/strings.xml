@@ -7,6 +7,10 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description_header">Opis projektu</string>
+    <string name="project_description">Projekt zostal wykonany przez Michala Oltarzewskiego w ramach przedmiotu
+    Jezyki i Narzedzia Programowania II na Uniwersytecie Warszawskim. Aplikacja jest mobilnym odpowiednikiem
+    projektu o tej samej nazwie znajdujacego sie na friturillo.pl .</string>
+    <string name="description_bottom">Wszelkie bledy lub pomysly na rozbudowanie aplikacji prosze kierowac bezposrednio
+    na adres mailowy mi.oltarzewski@gmail.com .</string>
 </resources>
