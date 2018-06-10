@@ -11,9 +11,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
+    private JSONArray route;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        try {
+            route = new JSONArray(getIntent().getStringExtra("JSON_ROUTE"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        JSONObject place;
+        LatLng point = null;
+        for (int i = 0; i < route.length(); i++) {
+            try {
+                place = (JSONObject)route.get(i);
+                point = new LatLng(place.getDouble("longitude"), place.getDouble("latitude"));
+
+                mMap.addMarker(new MarkerOptions().position(point).title(place.getString("name")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (point != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo( 10.0f ));
+        }
     }
 }
