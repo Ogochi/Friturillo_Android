@@ -64,6 +64,9 @@ public class SearchFragment extends Fragment {
         getActivity().findViewById(R.id.search_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HideKeyboard hk = (HideKeyboard)getActivity();
+                hk.hideKeyboard();
+
                 String start = textView.getText().toString();
                 String end = textView2.getText().toString();
 
@@ -76,11 +79,11 @@ public class SearchFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("start", start);
                 bundle.putString("end", end);
-                Fragment newFragment = new RouteFragment();
+                Fragment newFragment = new LoaderFragment();
                 newFragment.setArguments(bundle);
 
                 FragmentChangeable fg = (FragmentChangeable)getActivity();
-                fg.setFragment(newFragment);
+                fg.setFragment(newFragment, false);
             }
         });
     }

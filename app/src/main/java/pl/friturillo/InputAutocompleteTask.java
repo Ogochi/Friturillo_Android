@@ -29,14 +29,14 @@ public class InputAutocompleteTask extends AsyncTask<String, Integer, List<Strin
         geoDataClient = Places.getGeoDataClient(activity);
         this.waitTimeInMilisec = waitTimeInMilisec;
         warsawLatLngBounds = new LatLngBounds(
-                new LatLng(52.071978, 20.699142), new LatLng(52.372384, 21.342611));
+                new LatLng(52.087037, 20.803345), new LatLng(52.316750, 21.118700));
     }
 
     @Override
     protected List<String> doInBackground(String... urls) {
         List<String> result = new ArrayList<>();
         AutocompleteFilter noneFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE).build();
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).build();
 
         for (String url : urls) {
             Task<AutocompletePredictionBufferResponse> request = geoDataClient.getAutocompletePredictions(
@@ -54,6 +54,7 @@ public class InputAutocompleteTask extends AsyncTask<String, Integer, List<Strin
 
             for (AutocompletePrediction ap : request.getResult())
                 result.add(ap.getFullText(null).toString());
+            request.getResult().release();
         }
 
         return result;

@@ -1,6 +1,7 @@
 package pl.friturillo;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,9 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentChangeable {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentChangeable, HideKeyboard {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,14 +38,23 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        setFragment(new SearchFragment());
+        setFragment(new SearchFragment(), true);
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(Fragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.fragment_container, fragment);
+        if (getFragmentManager().getBackStackEntryCount() == 0 && addToBackStack)
+            transaction.addToBackStack("FRAGMENT_BACK_STACK");
         transaction.commit();
+    }
+
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view != null && imm != null)
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
@@ -62,9 +73,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_route) {
-            setFragment(new SearchFragment());
+            setFragment(new SearchFragment(), false);
         } else if (id == R.id.nav_description) {
-            setFragment(new DescriptionFragment());
+            setFragment(new DescriptionFragment(), false);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
