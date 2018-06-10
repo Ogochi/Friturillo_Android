@@ -13,6 +13,13 @@
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp" android:layout_width="300dp">
 
         <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/start_autocomplete" android:hint="Poczatek podrozy"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/end_autocomplete"/>
+        <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/end_autocomplete" android:hint="Koniec podrozy"
@@ -22,13 +29,6 @@
                 android:layout_below="@+id/start_autocomplete" android:layout_alignLeft="@+id/start_autocomplete"
                 android:layout_alignStart="@+id/start_autocomplete" android:layout_marginTop="12dp"
                 android:layout_alignRight="@+id/start_autocomplete" android:layout_alignEnd="@+id/start_autocomplete"/>
-        <AutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/start_autocomplete" android:hint="Poczatek podrozy"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/end_autocomplete"/>
         <Button
                 android:text="Szukaj"
                 android:layout_width="wrap_content"
