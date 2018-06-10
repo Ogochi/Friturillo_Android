@@ -17,6 +17,8 @@ import android.widget.AutoCompleteTextView;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
+    private InputAutocompleteTask currentTask;
+
     private void addChangeListener(AutoCompleteTextView autocomplete, final ArrayAdapter<String> adapter) {
         autocomplete.addTextChangedListener(new TextWatcher() {
             @Override
@@ -28,14 +30,18 @@ public class SearchFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 2) {
-                    new InputAutocompleteTask(getActivity(), 10000,
+                    if (currentTask != null)
+                        currentTask.cancel(true);
+
+                    currentTask = new InputAutocompleteTask(getActivity(), 3000,
                             new Consumer<List<String>>() {
                                 @Override
                                 public void accept(List<String> strings) {
                                     adapter.clear();
                                     adapter.addAll(strings);
                                 }
-                            }).execute(editable.toString());
+                            });
+                    currentTask.execute(editable.toString());
                 }
             }
         });
@@ -83,7 +89,7 @@ public class SearchFragment extends Fragment {
                 newFragment.setArguments(bundle);
 
                 FragmentChangeable fg = (FragmentChangeable)getActivity();
-                fg.setFragment(newFragment, false);
+                fg.setFragment(newFragment);
             }
         });
     }

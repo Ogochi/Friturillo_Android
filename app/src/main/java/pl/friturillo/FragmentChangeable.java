@@ -3,5 +3,5 @@ package pl.friturillo;
 import android.app.Fragment;
 
 public interface FragmentChangeable {
-    void setFragment(Fragment fragment, boolean addToBackStack);
+    void setFragment(Fragment fragment);
 }

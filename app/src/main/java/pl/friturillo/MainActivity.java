@@ -19,8 +19,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
+import org.json.JSONArray;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentChangeable, HideKeyboard {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentChangeable, HideKeyboard,
+        MapFromJSON, ShowingRoute {
+    private boolean isShowingRoute = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,15 +43,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        setFragment(new SearchFragment(), true);
+        setFragment(new SearchFragment());
     }
 
-    public void setFragment(Fragment fragment, boolean addToBackStack) {
+    public void setFragment(Fragment fragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.fragment_container, fragment);
-        if (getFragmentManager().getBackStackEntryCount() == 0 && addToBackStack)
-            transaction.addToBackStack("FRAGMENT_BACK_STACK");
         transaction.commit();
     }
 
@@ -63,7 +66,12 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (isShowingRoute) {
+                isShowingRoute = false;
+                setFragment(new SearchFragment());
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -73,13 +81,25 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_route) {
-            setFragment(new SearchFragment(), false);
+            setFragment(new SearchFragment());
         } else if (id == R.id.nav_description) {
-            setFragment(new DescriptionFragment(), false);
+            setFragment(new DescriptionFragment());
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void showMapFromJSON(String jsonArray) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("JSON_ROUTE", jsonArray);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showingRoute() {
+        isShowingRoute = true;
     }
 }

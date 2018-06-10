@@ -32,11 +32,13 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity"></activity>
+            android:label="@string/title_activity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

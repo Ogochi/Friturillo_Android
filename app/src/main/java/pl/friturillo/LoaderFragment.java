@@ -12,7 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +33,7 @@ import java.util.concurrent.TimeoutException;
 
 public class LoaderFragment extends Fragment {
     private String start, end;
+    private static String ROUTE_API_URL = "https://friturillo.pl/dijkstra";
 
     @SuppressLint("StaticFieldLeak")
     private void getAddresses(final Geocoder geocoder) {
@@ -45,39 +56,61 @@ public class LoaderFragment extends Fragment {
                     super.onPostExecute(addresses);
 
                     if (addresses.size() == 2) {
-                        moveToRouteSearch(addresses.get(0), addresses.get(1));
+                        getRoute(addresses.get(0), addresses.get(1));
                     } else {
                         Log.w("GEO", "Geocoding failed");
-                        returnToSearch();
+                        returnToSearch("Blad Geocodingu");
                     }
                 }
             }.execute();
         } catch (Exception e) {
             e.printStackTrace();
             Log.w("GEO", "Geocoding failed");
-            returnToSearch();
+            returnToSearch("Blad Geocodingu");
         }
     }
 
-    private void returnToSearch() {
-        Snackbar.make(getActivity().findViewById(R.id.progressBar), "Blad!", Snackbar.LENGTH_LONG)
+    private void returnToSearch(String msg) {
+        Snackbar.make(getActivity().findViewById(R.id.progressBar), msg, Snackbar.LENGTH_LONG)
                 .setAction("Geocoding api return empty", null).show();
 
         FragmentChangeable fg = (FragmentChangeable)getActivity();
-        fg.setFragment(new SearchFragment(), true);
+        fg.setFragment(new SearchFragment());
     }
 
-    private void moveToRouteSearch(Address start, Address end) {
+    private void getRoute(Address start, Address end) {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET,
+                createUrlWithParams(start, end), null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        receivedRoute(response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERR", "JSON req failed");
+                        returnToSearch("Nie udalo sie uzyskac trasy");
+                    }
+                });
+
+        queue.add(jsonObjectRequest);
+    }
+
+    private void receivedRoute(JSONArray route) {
         Bundle bundle = new Bundle();
-        bundle.putDouble("startLon", start.getLongitude());
-        bundle.putDouble("startLat", start.getLatitude());
-        bundle.putDouble("endLon", start.getLongitude());
-        bundle.putDouble("endLat", start.getLatitude());
+        bundle.putString("route", route.toString());
         Fragment newFragment = new RouteFragment();
         newFragment.setArguments(bundle);
 
         FragmentChangeable fg = (FragmentChangeable)getActivity();
-        fg.setFragment(newFragment, false);
+        fg.setFragment(newFragment);
+    }
+
+    private String createUrlWithParams(Address start, Address end) {
+        return ROUTE_API_URL + "?station_a=" + start.getLatitude() + "|" + start.getLongitude() +
+                "&station_b=" + end.getLatitude() + "|" + end.getLongitude();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,7 +125,7 @@ public class LoaderFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final Geocoder geocoder = new Geocoder(getActivity());
         if (!Geocoder.isPresent()) {
-            returnToSearch();
+            returnToSearch("Nie znaleziono funkcjonalnosci Geocoding");
             return;
         }
 
