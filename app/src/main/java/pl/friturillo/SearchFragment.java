@@ -19,7 +19,7 @@ import java.util.List;
 public class SearchFragment extends Fragment {
     private InputAutocompleteTask currentTask;
 
-    private void addChangeListener(AutoCompleteTextView autocomplete, final ArrayAdapter<String> adapter) {
+    private void addChangeListener(final AutoCompleteTextView autocomplete, final ArrayAdapter<String> adapter) {
         autocomplete.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -29,6 +29,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d("INPUT", editable.toString() + " size: " + editable.length());
                 if (editable.length() > 2) {
                     if (currentTask != null)
                         currentTask.cancel(true);
@@ -37,8 +38,13 @@ public class SearchFragment extends Fragment {
                             new Consumer<List<String>>() {
                                 @Override
                                 public void accept(List<String> strings) {
+                                    Log.d("AUTOCOMPLETE", strings.toString());
                                     adapter.clear();
                                     adapter.addAll(strings);
+
+                                    adapter.notifyDataSetChanged();
+                                    adapter.getFilter().filter(null);
+                                    autocomplete.performValidation();
                                 }
                             });
                     currentTask.execute(editable.toString());
@@ -57,7 +63,9 @@ public class SearchFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         final ArrayAdapter<String> adapterStart = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
+        adapterStart.setNotifyOnChange(true);
         final ArrayAdapter<String> adapterEnd = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
+        adapterEnd.setNotifyOnChange(true);
 
         final AutoCompleteTextView textView = getActivity().findViewById(R.id.start_autocomplete);
         final AutoCompleteTextView textView2 = getActivity().findViewById(R.id.end_autocomplete);
