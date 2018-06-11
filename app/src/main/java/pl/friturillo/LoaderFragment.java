@@ -81,7 +81,7 @@ public class LoaderFragment extends Fragment {
     private void getRoute(Address start, Address end) {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
                 createUrlWithParams(start, end), null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -95,7 +95,7 @@ public class LoaderFragment extends Fragment {
                     }
                 });
 
-        queue.add(jsonObjectRequest);
+        queue.add(jsonArrayRequest);
     }
 
     private void receivedRoute(JSONArray route) {
