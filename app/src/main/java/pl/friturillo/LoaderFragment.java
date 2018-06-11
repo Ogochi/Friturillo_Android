@@ -59,14 +59,14 @@ public class LoaderFragment extends Fragment {
                         getRoute(addresses.get(0), addresses.get(1));
                     } else {
                         Log.w("GEO", "Geocoding failed");
-                        returnToSearch("Blad Geocodingu");
+                        returnToSearch("Blad sieci");
                     }
                 }
             }.execute();
         } catch (Exception e) {
             e.printStackTrace();
             Log.w("GEO", "Geocoding failed");
-            returnToSearch("Blad Geocodingu");
+            returnToSearch("Blad sieci");
         }
     }
 
