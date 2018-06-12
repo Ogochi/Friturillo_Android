@@ -32,4 +32,6 @@ Additionally project uses multiple Google Apis:
 
 ## Info
 
+Current version for download is available [here](https://drive.google.com/open?id=1LSeZGHlQfnClAhcCebG5Sg7lG0e1J8pF).
+
 Project is done as a part of course " Languages and Tools for Programming II - Android Applications" at University of Warsaw.
